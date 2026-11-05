@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My Attendance')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>My Attendance</h2>
+
+  <div class="stats">
+    <div class="stat-card"><h3 th:text="${thisMonth}">0</h3><p>Is Mahine</p></div>
+    <div class="stat-card"><h3 th:text="${#lists.size(list)}">0</h3><p>Total Din</p></div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Date</th><th>Check-in</th></tr>
+      <tr th:each="a : ${list}">
+        <td th:text="${#temporals.format(a.attendanceDate, 'dd MMM yyyy')}"></td>
+        <td th:text="${a.checkInTime != null ? #temporals.format(a.checkInTime, 'hh:mm a') : '-'}"></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(list)}"><td colspan="2">There Is No Attendance Yet</td></tr>
+    </table>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Membership Plans')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>Membership Plans</h2>
+
+  <div class="card wide" style="margin-top:20px">
+    <h2 th:text="${plan.id == null} ? 'Add New Plan' : 'Edit Plan'">Add New Plan</h2>
+
+    <form th:action="@{/owner/plans/save}" method="post">
+      <input type="hidden" name="id" th:value="${plan.id}">
+
+      <label>Plan Name</label>
+      <input type="text" name="name" th:value="${plan.name}" placeholder="jaise 2 Months" required>
+
+      <label>Duration (mahine)</label>
+      <input type="number" name="months" min="1" max="60" th:value="${plan.months}" required>
+
+      <label>Price (₹)</label>
+      <input type="number" name="price" min="0" th:value="${plan.price}" required>
+
+      <button class="btn" type="submit" th:text="${plan.id == null} ? 'Add Plan' : 'Update Plan'">Add Plan</button>
+    </form>
+
+    <p th:if="${plan.id != null}" style="margin-top:14px">
+      <a th:href="@{/owner/plans}" style="color:var(--muted)">Cancel</a>
+    </p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <tr><th>Plan</th><th>Duration</th><th>Price</th><th>Action</th></tr>
+      <tr th:each="p : ${plans}">
+        <td th:text="${p.name}"></td>
+        <td th:text="${p.months} + ' mahine'"></td>
+        <td th:text="'₹' + ${p.price}"></td>
+        <td>
+          <div class="actions">
+            <a class="btn btn-sm btn-outline" th:href="@{/owner/plans/{id}/edit(id=${p.id})}">Edit</a>
+            <form th:action="@{/owner/plans/{id}/delete(id=${p.id})}" method="post"
+                  onsubmit="return confirm('Is plan ko delete karna hai?')">
+              <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(plans)}"><td colspan="4">Koi plan nahi hai</td></tr>
+    </table>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

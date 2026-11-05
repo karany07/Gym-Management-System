@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Home')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="home-hero">
+    <img class="hero-img" th:src="@{/images/hanuman.png}" alt="Hanuman ji">
+    <h1>Welcome to <span style="color:var(--accent)" th:text="${gym.name}">FitZone Gym</span></h1>
+    <p>Membership, attendance aur payments ek jagah.</p>
+
+    <div class="actions" style="justify-content:center; margin-top:20px">
+      <a class="btn" th:href="@{/member/login}">Member Login</a>
+      <a class="btn btn-outline" th:href="@{/owner/login}">Owner Login</a>
+    </div>
+
+    <p th:if="${!#strings.isEmpty(gym.address)}" style="margin-top:28px">
+      📍 <span th:text="${gym.address}"></span>
+    </p>
+    <p th:if="${!#strings.isEmpty(gym.phone)}">
+      📞 <span th:text="${gym.phone}"></span>
+    </p>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

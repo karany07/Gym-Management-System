@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('About')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h1 th:text="'About ' + ${gym.name}">About</h1>
+
+  <p class="prewrap" th:if="${!#strings.isEmpty(gym.about)}" th:text="${gym.about}"></p>
+  <p th:if="${#strings.isEmpty(gym.about)}" style="color:var(--muted)">
+    Hamare baare me jaankari jaldi yahan milegi.
+  </p>
+
+  <p style="margin-top:20px"><a class="btn" th:href="@{/contact}">Contact Us</a></p>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('My Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>Hi, <span th:text="${member.user.name}"></span></h2>
+
+  <div class="card wide">
+    <p><b>Member ID:</b> <span th:text="${member.user.memberCode}"></span></p>
+    <p><b>Plan:</b> <span th:text="${member.plan.name}"></span></p>
+    <p><b>Expiry:</b> <span th:text="${#temporals.format(member.expiryDate, 'dd MMM yyyy')}"></span></p>
+    <p><span th:class="'status status-' + ${member.status}"
+             th:text="${#strings.capitalize(member.status)}"></span></p>
+    <p style="color:var(--red)" th:if="${member.status == 'expiring'}"
+       th:text="'Your gym membership will expire in ' + ${member.daysLeft} + ' days. Please renew your membership.'"></p>
+           <a class="btn btn-sm" th:href="@{/member/card}">View Member Card</a>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

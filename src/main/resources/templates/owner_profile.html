@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Owner Profile')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="card wide">
+    <h2>Owner Profile</h2>
+
+    <form th:action="@{/owner/profile}" method="post">
+      <label>Full Name</label>
+      <input type="text" name="name" th:value="${owner.name}" maxlength="100" required>
+
+      <label>Email (isi se login hota hai)</label>
+      <input type="email" name="email" th:value="${owner.email}" maxlength="120" required>
+
+      <label>Mobile (optional)</label>
+      <input type="tel" name="mobile" th:value="${owner.mobile}">
+
+      <button class="btn" type="submit">Save Profile</button>
+    </form>
+
+    <p style="margin-top:18px">
+      <a th:href="@{/account/password}" style="color:var(--accent)">Change password</a> |
+      <a th:href="@{/owner/settings}" style="color:var(--accent)">Gym settings</a>
+    </p>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Contact')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="card wide">
+    <h2>Contact</h2>
+    <p><b th:text="${gym.name}"></b></p>
+
+    <p th:if="${!#strings.isEmpty(gym.address)}">📍 Maharastra Ngr Mankhurd Mumbai <span th:text="${gym.address}"></span></p>
+    <p th:if="${!#strings.isEmpty(gym.phone)}">📞 8707237881
+      <a th:href="'tel:' + ${gym.phone}" th:text="${gym.phone}" style="color:var(--accent)"></a></p>
+    <p th:if="${!#strings.isEmpty(gym.email)}">✉️
+      <a th:href="'mailto:' + ${gym.email}" th:text="${gym.email}" style="color:var(--accent)"></a></p>
+
+    <p th:if="${!#strings.isEmpty(gym.address)}" style="margin-top:16px">
+      <a class="btn btn-sm" target="_blank" rel="noopener"
+         th:href="@{https://www.google.com/maps/search/(api=1,query=${gym.address})}">Open in Maps</a>
+    </p>
+
+    <p th:if="${#strings.isEmpty(gym.address) and #strings.isEmpty(gym.phone) and #strings.isEmpty(gym.email)}"
+       style="color:var(--muted)">Contact details abhi add nahi hui hain.</p>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

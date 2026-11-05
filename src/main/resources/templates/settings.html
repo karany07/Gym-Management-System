@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Gym Settings')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="card wide">
+    <h2>Gym Settings</h2>
+
+    <form th:action="@{/owner/settings}" method="post">
+      <label>Gym Name</label>
+      <input type="text" name="name" th:value="${gym.name}" maxlength="100" required>
+
+      <label>Address</label>
+      <input type="text" name="address" th:value="${gym.address}" maxlength="300">
+
+      <label>Contact Number</label>
+      <input type="tel" name="phone" th:value="${gym.phone}" maxlength="20">
+
+      <label>Email</label>
+      <input type="email" name="email" th:value="${gym.email}" maxlength="120">
+
+      <label>About the Gym</label>
+      <textarea name="about" rows="5" maxlength="1000" th:text="${gym.about}"></textarea>
+
+      <button class="btn" type="submit">Save Settings</button>
+    </form>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

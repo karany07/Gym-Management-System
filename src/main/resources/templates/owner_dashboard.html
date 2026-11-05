@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Owner Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+
+  <!-- Gym ki details -->
+  <div class="gym-info">
+    <div>
+      <h2 th:text="${gym.name}">Gym</h2>
+      <p th:text="${gym.address}"></p>
+    </div>
+    <div>
+      <p><b>Owner:</b> <span th:text="${owner.name}"></span></p>
+      <p><b>Contact:</b> <span th:text="${gym.phone}"></span></p>
+      <p><b>Email:</b> <span th:text="${gym.email}"></span></p>
+    </div>
+  </div>
+
+  <!-- 6 cards -->
+  <div class="stats">
+    <div class="stat-card"><h3 th:text="${total}">0</h3><p>Total Members</p></div>
+    <div class="stat-card"><h3 style="color:var(--green)" th:text="${activeCount}">0</h3><p>Active Members</p></div>
+    <div class="stat-card"><h3 style="color:var(--orange)" th:text="${expiringCount}">0</h3><p>Expiring Soon</p></div>
+    <div class="stat-card"><h3 style="color:var(--red)" th:text="${expiredCount}">0</h3><p>Expired Members</p></div>
+    <div class="stat-card"><h3 th:text="${todayCount}">0</h3><p>Today's Attendance</p></div>
+    <div class="stat-card"><h3 th:text="'₹' + ${revenue}">₹0</h3><p>Total Revenue</p></div>
+  </div>
+
+  <!-- Alerts -->
+  <div class="alert-panel">
+    <div class="alert-row danger" th:if="${expiredCount gt 0}">
+      🔴 <b th:text="${expiredCount}"></b> memberships expired
+    </div>
+    <div class="alert-row warning" th:if="${expiringCount gt 0}">
+      🟠 <b th:text="${expiringCount}"></b> memberships expire within 7 days
+    </div>
+    <div class="alert-row success" th:if="${newThisMonth gt 0}">
+      🟢 <b th:text="${newThisMonth}"></b> new members this month
+    </div>
+    <div class="alert-row muted" th:if="${archivedCount gt 0}">
+      ⚫ <b th:text="${archivedCount}"></b> archived members
+    </div>
+  </div>
+
+  <!-- Expiring Soon -->
+  <div th:if="${!#lists.isEmpty(expiringList)}">
+    <h3 style="margin-top:30px">🔴 Membership Expiring Soon</h3>
+    <div class="table-wrap">
+      <table>
+        <tr><th>Member</th><th>Membership</th><th>Expiry Date</th><th>Days Left</th></tr>
+        <tr class="row-expiring" th:each="m : ${expiringList}">
+          <td th:text="${m.user.name}"></td>
+          <td th:text="${m.plan.name}"></td>
+          <td th:text="${#temporals.format(m.expiryDate, 'dd MMM yyyy')}"></td>
+          <td th:text="${m.daysLeft} + (${m.daysLeft} == 1 ? ' day' : ' days')"></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- Recent Members -->
+  <h3 style="margin-top:30px">Recent Members</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Member ID</th><th>Name</th><th>Plan</th><th>Expiry Date</th><th>Status</th></tr>
+      <tr th:each="m : ${recentMembers}">
+        <td th:text="${m.user.memberCode}"></td>
+        <td th:text="${m.user.name}"></td>
+        <td th:text="${m.plan.name}"></td>
+        <td th:text="${#temporals.format(m.expiryDate, 'dd MMM yyyy')}"></td>
+        <td><span th:class="'status status-' + ${m.status}"
+                  th:text="${#strings.capitalize(m.status)}"></span></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(recentMembers)}"><td colspan="5">Abhi koi member nahi hai</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

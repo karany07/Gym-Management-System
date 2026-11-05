@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Member Login')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+
+<div class="auth-wrap">
+  <div class="card">
+    <h2>Member Login</h2>
+    <div class="flash flash-danger" th:if="${param.error}">ID/mobile/email wrong  please enter correct email and password</div>
+        <div class="flash flash-danger" th:if="${param.locked}">Too many attempts, please try again after 5 minutes</div>
+    <form th:action="@{/login}" method="post">
+      <input type="hidden" name="from" value="member">
+
+      <label>Member ID / Mobile / Email</label>
+      <input type="text" name="username" required>
+
+      <label>Password</label>
+      <input type="password" name="password" id="password" required>
+      <label class="check"><input type="checkbox" id="togglePassword"> Show password</label>
+
+      <button class="btn" type="submit">Login</button>
+    </form>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('All Members')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>All Members</h2>
+
+  <form method="get" th:action="@{/owner/members}" class="toolbar">
+    <input type="text" name="q" th:value="${q}" placeholder="Name, Member ID ya Mobile">
+    <select name="status">
+      <option value="all" th:selected="${status == 'all'}">All</option>
+      <option value="active" th:selected="${status == 'active'}">Active</option>
+      <option value="expiring" th:selected="${status == 'expiring'}">Expiring Soon</option>
+      <option value="expired" th:selected="${status == 'expired'}">Expired</option>
+      <option value="archived" th:selected="${status == 'archived'}">Archived</option>
+    </select>
+    <button class="btn" type="submit">Search</button>
+  </form>
+
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>Member ID</th><th>Name</th><th>Mobile</th><th>Plan</th>
+        <th>Expiry Date</th><th>Days Left</th><th>Status</th><th>Action</th>
+      </tr>
+      <tr th:each="m : ${members}"
+          th:classappend="${m.status == 'expiring' or m.status == 'expired'} ? 'row-expiring'">
+        <td th:text="${m.user.memberCode}"></td>
+        <td th:text="${m.user.name}"></td>
+        <td th:text="${m.user.mobile}"></td>
+        <td th:text="${m.plan.name}"></td>
+        <td th:text="${#temporals.format(m.expiryDate, 'dd MMM yyyy')}"></td>
+        <td th:text="${m.daysLeft gt 0 ? m.daysLeft : 'Over'}"></td>
+        <td><span th:class="'status status-' + ${m.status}"
+                  th:text="${#strings.capitalize(m.status)}"></span></td>
+        <td><a class="btn btn-sm" th:href="@{/owner/members/{id}/renew(id=${m.id})}">Renew</a></td>
+                <td>
+          <div class="actions">
+            <a class="btn btn-sm" th:href="@{/owner/members/{id}/renew(id=${m.id})}">Renew</a>
+            <a class="btn btn-sm btn-outline" th:href="@{/owner/members/{id}/card(id=${m.id})}">Card</a>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(members)}"><td colspan="8">Koi member nahi mila</td></tr>
+    </table>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Payments')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>Payment History</h2>
+
+  <div class="stats">
+    <div class="stat-card"><h3 th:text="${#lists.size(payments)}">0</h3><p>Payments</p></div>
+    <div class="stat-card"><h3 th:text="'₹' + ${total}">₹0</h3><p>Total Amount</p></div>
+  </div>
+
+  <form method="get" th:action="@{/owner/payments}" class="toolbar">
+    <input type="text" name="q" th:value="${q}" placeholder="Name, Member ID ya Transaction ID">
+    <button class="btn" type="submit">Search</button>
+  </form>
+
+  <div class="table-wrap">
+    <table>
+      <tr>
+        <th>Date</th><th>Member</th><th>Plan</th><th>Amount</th>
+        <th>Method</th><th>Transaction ID</th><th>Next Expiry</th>
+      </tr>
+      <tr th:each="p : ${payments}">
+        <td th:text="${#temporals.format(p.paymentDate, 'dd MMM yyyy')}"></td>
+        <td><span th:text="${p.member.user.name}"></span>
+            (<span th:text="${p.member.user.memberCode}"></span>)</td>
+        <td th:text="${p.planName}"></td>
+        <td th:text="'₹' + ${p.amount}"></td>
+        <td th:text="${p.method}"></td>
+        <td th:text="${p.transactionId != null ? p.transactionId : '-'}"></td>
+        <td th:text="${#temporals.format(p.nextExpiry, 'dd MMM yyyy')}"></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(payments)}"><td colspan="7">Koi payment nahi mili</td></tr>
+    </table>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head th:fragment="head(title)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title}">FitZone Gym</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+<nav class="navbar" th:fragment="navbar">
+  <a th:href="@{/}" class="brand"
+     th:text="${gymName != null ? #strings.toUpperCase(gymName) : 'FITZONE'}">FITZONE</a>
+
+  <div class="nav-links">
+
+    <!-- Sirf owner -->
+    <th:block sec:authorize="hasRole('OWNER')">
+      <a th:href="@{/owner/dashboard}">Dashboard</a>
+      <a th:href="@{/owner/members}">Members</a>
+      <a th:href="@{/owner/plans}">Plans</a>
+      <a th:href="@{/owner/payments}">Payments</a>
+      <a th:href="@{/owner/attendance}">Attendance</a>
+      <a th:href="@{/owner/verify}">Verify</a>
+      <a th:href="@{/owner/members/add}">Add Member</a>
+      <a th:href="@{/owner/settings}">Settings</a>
+      <a th:href="@{/owner/profile}">Profile</a>
+      <a th:href="@{/account/password}">Password</a>
+    </th:block>
+
+    <!-- Sirf member -->
+    <th:block sec:authorize="hasRole('MEMBER')">
+      <a th:href="@{/member/dashboard}">My Dashboard</a>
+      <a th:href="@{/member/card}">My Card</a>
+      <a th:href="@{/member/attendance}">My Attendance</a>
+      <a th:href="@{/account/password}">Password</a>
+    </th:block>
+
+    <!-- Login ke baad (owner aur member dono) -->
+    <th:block sec:authorize="isAuthenticated()">
+      <a th:href="@{/notifications}" class="bell">🔔<span class="badge"
+         th:if="${unreadCount != null and unreadCount gt 0}" th:text="${unreadCount}">0</span></a>
+      <form th:action="@{/logout}" method="post"><button class="btn" type="submit">Logout</button></form>
+    </th:block>
+
+    <!-- Login se pehle -->
+    <th:block sec:authorize="!isAuthenticated()">
+      <a th:href="@{/about}">About</a>
+      <a th:href="@{/contact}">Contact</a>
+      <a th:href="@{/owner/login}">Owner Login</a>
+      <a th:href="@{/member/login}" class="btn">Member Login</a>
+    </th:block>
+
+  </div>
+</nav>
+
+<div class="container" th:fragment="flash">
+  <div class="flash flash-success" th:if="${success}" th:text="${success}"></div>
+  <div class="flash flash-danger" th:if="${error}" th:text="${error}"></div>
+</div>
+</body>
+</html>

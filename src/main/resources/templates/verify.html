@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Verify Member')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="card wide verify-card">
+    <h2>Verify Member</h2>
+
+    <form method="get" th:action="@{/owner/verify}" class="toolbar" style="justify-content:center">
+      <input type="text" name="code" placeholder="Member ID ya Mobile (jaise GYM001)">
+      <button class="btn" type="submit">Check</button>
+    </form>
+
+    <div th:if="${member != null}">
+      <div th:class="${member.daysLeft gt 0} ? 'verify-badge ok' : 'verify-badge bad'"
+           th:text="${member.daysLeft gt 0} ? 'ACTIVE' : 'EXPIRED'">ACTIVE</div>
+
+      <h3 th:text="${member.user.name}">Name</h3>
+      <p><b>Member ID:</b> <span th:text="${member.user.memberCode}"></span></p>
+      <p><b>Plan:</b> <span th:text="${member.plan.name}"></span></p>
+      <p><b>Expiry:</b> <span th:text="${#temporals.format(member.expiryDate, 'dd MMM yyyy')}"></span></p>
+
+      <p th:if="${member.daysLeft gt 0}" th:text="${member.daysLeft} + ' din baaki'"></p>
+      <p th:if="${member.daysLeft le 0}"
+         th:text="${member.daysLeft == 0 ? 'Aaj expire hui' : 'Expire hue ' + (-member.daysLeft) + ' din ho gaye'}"></p>
+
+      <div class="actions" style="justify-content:center; margin-top:16px">
+        <form th:if="${member.daysLeft gt 0}" th:action="@{/owner/attendance/mark}" method="post">
+          <input type="hidden" name="memberId" th:value="${member.id}">
+          <input type="hidden" name="date" th:value="${#temporals.format(today, 'yyyy-MM-dd')}">
+          <button class="btn" type="submit">Mark Present</button>
+        </form>
+        <a th:if="${member.daysLeft le 0}" class="btn"
+           th:href="@{/owner/members/{id}/renew(id=${member.id})}">Renew Membership</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

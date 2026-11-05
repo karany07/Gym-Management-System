@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Attendance')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <h2>Attendance</h2>
+
+  <form method="get" th:action="@{/owner/attendance}" class="toolbar">
+    <input type="date" name="date" th:value="${#temporals.format(day, 'yyyy-MM-dd')}">
+    <button class="btn" type="submit">Show</button>
+  </form>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3 th:text="${#temporals.format(day, 'dd MMM yyyy')}"></h3><p>Selected Date</p>
+    </div>
+    <div class="stat-card">
+      <h3 style="color:var(--green)" th:text="${#lists.size(present)}">0</h3><p>Present</p>
+    </div>
+    <div class="stat-card">
+      <h3 th:text="${#lists.size(pending)}">0</h3><p>Not Marked Yet</p>
+    </div>
+  </div>
+
+  <h3 style="margin-top:30px">Present</h3>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Member ID</th><th>Name</th><th>Check-in</th></tr>
+      <tr th:each="a : ${present}">
+        <td th:text="${a.member.user.memberCode}"></td>
+        <td th:text="${a.member.user.name}"></td>
+        <td th:text="${a.checkInTime != null ? #temporals.format(a.checkInTime, 'hh:mm a') : '-'}"></td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(present)}"><td colspan="3">There Are No Present On This Date</td></tr>
+    </table>
+  </div>
+
+  <h3 style="margin-top:30px">Mark Present</h3>
+  <p style="color:var(--muted)">Only Those Members Will Be Visible Whose Membership Was Active On This Date .</p>
+  <div class="table-wrap">
+    <table>
+      <tr><th>Member ID</th><th>Name</th><th>Status</th><th>Action</th></tr>
+      <tr th:each="m : ${pending}">
+        <td th:text="${m.user.memberCode}"></td>
+        <td th:text="${m.user.name}"></td>
+        <td><span th:class="'status status-' + ${m.status}"
+                  th:text="${#strings.capitalize(m.status)}"></span></td>
+        <td>
+          <div class="actions">
+            <form th:action="@{/owner/attendance/mark}" method="post">
+              <input type="hidden" name="memberId" th:value="${m.id}">
+              <input type="hidden" name="date" th:value="${#temporals.format(day, 'yyyy-MM-dd')}">
+              <button class="btn btn-sm" type="submit">Mark Present</button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      <tr th:if="${#lists.isEmpty(pending)}"><td colspan="4">All Active Members Are Markeed Present</td></tr>
+    </table>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+</body>
+</html>

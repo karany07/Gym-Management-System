@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments :: head('Renew Membership')}"></head>
+<body>
+<nav th:replace="~{fragments :: navbar}"></nav>
+<div th:replace="~{fragments :: flash}"></div>
+
+<div class="container">
+  <div class="card wide">
+    <h2>Renew Membership</h2>
+
+    <p><b>Member:</b> <span th:text="${member.user.name}"></span>
+       (<span th:text="${member.user.memberCode}"></span>)</p>
+    <p><b>Abhi ka plan:</b> <span th:text="${member.plan.name}"></span></p>
+    <p><b>Expiry:</b> <span th:text="${#temporals.format(member.expiryDate, 'dd MMM yyyy')}"></span>
+       <span th:class="'status status-' + ${member.status}"
+             th:text="${#strings.capitalize(member.status)}"></span></p>
+
+    <form th:action="@{/owner/members/{id}/renew(id=${member.id})}" method="post">
+      <label>New Plan</label>
+      <select name="planId" id="plan" required>
+        <option th:each="p : ${plans}"
+                th:value="${p.id}"
+                th:attr="data-months=${p.months}"
+                th:selected="${p.id == member.plan.id}"
+                th:text="${p.name} + ' - ₹' + ${p.price}"></option>
+      </select>
+
+      <label>New Start Date</label>
+      <input type="date" name="startDate" id="startDate"
+             th:value="${#temporals.format(suggestedStart, 'yyyy-MM-dd')}" required>
+
+      <label>New Expiry Date (auto)</label>
+      <input type="date" id="expiryDate" readonly>
+
+      <label>Amount Paid (₹)</label>
+      <input type="number" name="amount" min="0" required>
+
+      <label>Payment Method</label>
+      <select name="paymentMethod" id="paymentMethod">
+        <option value="Cash">Cash</option>
+        <option value="UPI">UPI</option>
+      </select>
+
+      <div id="qrBox" style="display:none; text-align:center; margin:16px 0">
+        <img th:src="@{/images/payment-qr.png}" alt="Scan to pay"
+             style="width:220px; background:#fff; padding:8px; border-radius:12px;">
+        <p style="color:var(--muted); font-size:.9rem">Scan karke payment karein, phir Transaction ID daalein</p>
+      </div>
+
+      <div id="txnBox" style="display:none">
+        <label>Transaction ID</label>
+        <input type="text" name="transactionId" id="transactionId">
+      </div>
+
+      <button class="btn" type="submit">Renew Membership</button>
+    </form>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+  const method = document.getElementById('paymentMethod');
+  const qrBox = document.getElementById('qrBox');
+  const txnBox = document.getElementById('txnBox');
+
+  function toggleQr() {
+    const upi = method.value === 'UPI';
+    qrBox.style.display = upi ? 'block' : 'none';
+    txnBox.style.display = (method.value !== 'Cash') ? 'block' : 'none';
+  }
+  method.addEventListener('change', toggleQr);
+  toggleQr();
+</script>
+</body>
+</html>
