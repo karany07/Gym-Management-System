@@ -25,11 +25,9 @@ public class SecurityConfig {
         HttpSessionRequestCache cache = new HttpSessionRequestCache();
 
         http
-            .csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"))   // ADD THIS
-            .headers(headers -> headers.frameOptions(frame -> frame.sameOrigin()))  // ADD THIS
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/about", "/contact", "/owner/login", "/member/login",
-                                "/css/**", "/js/**", "/images/**", "/error", "/h2-console/**").permitAll()   
+                                 "/css/**", "/js/**", "/images/**", "/error").permitAll()
                 .requestMatchers("/owner/**").hasRole("OWNER")     // sirf owner
                 .requestMatchers("/member/**").hasRole("MEMBER")   // sirf member
                 .anyRequest().authenticated())
