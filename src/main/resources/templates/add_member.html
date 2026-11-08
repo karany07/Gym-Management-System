@@ -62,4 +62,27 @@
       <input type="text" name="transactionId" maxlength="60">
 
       <label>Member Login Password</label>
-      <input type="password" name="password"
+      <input type="password" name="password" minlength="6" required>
+
+      <label>Profile Photo</label>
+      <input type="file" name="photo" id="photo" accept="image/*">
+      <img id="preview" class="preview" alt="">
+
+      <button class="btn" type="submit">Save Member</button>
+    </form>
+  </div>
+</div>
+
+<script th:src="@{/js/main.js}"></script>
+<script>
+  const method = document.getElementById('paymentMethod');
+  const qrBox = document.getElementById('qrBox');
+
+  function toggleQr() {
+    qrBox.style.display = (method.value === 'UPI') ? 'block' : 'none';
+  }
+  method.addEventListener('change', toggleQr);
+  toggleQr();
+</script>
+</body>
+</html>
