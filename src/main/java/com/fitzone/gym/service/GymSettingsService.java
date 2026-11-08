@@ -25,7 +25,8 @@ public class GymSettingsService {
     @Value("${gym.email:}")
     private String defaultEmail;
 
-    public GymSettings get() {
+    // synchronized: ek saath do request aayein to dono insert na karein
+    public synchronized GymSettings get() {
         return repo.findById(1L).orElseGet(() -> {
             GymSettings g = new GymSettings();
             g.setName(defaultName);
